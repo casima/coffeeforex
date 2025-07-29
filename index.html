@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Forex</title>
+
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Estilos globais ou para fontes personalizadas */
+        @font-face {
+            font-family: 'Barcelony';
+            src: url('./fonts/Barcelony.ttf') format('truetype'); /* Ajuste este caminho se a fonte estiver em outro local */
+            font-weight: normal;
+            font-style: normal;
+        }
+        .font-barcelony {
+            font-family: 'Barcelony', cursive; /* Fallback para uma fonte cursiva genérica */
+        }
+
+        body { font-family: 'Inter', sans-serif; }
+        .scroll-mt-24 { scroll-margin-top: 6rem; } /* Ajuste para rolagem suave abaixo do cabeçalho fixo */
+        .gradient-text {
+            background: linear-gradient(to right, #D2C3B5, #F5F2EF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Cores melhoradas para as barras do gráfico */
+        .bar-chart-bar-traditional-prod { background-color: #7B3F00 !important; } /* Marrom mais escuro para produção tradicional */
+        .bar-chart-bar-traditional-value { background-color: #A0522D !important; } /* Marrom médio para valor tradicional */
+        .bar-chart-bar-special-prod { background-color: #D2C3B5 !important; } /* Bege para produção especial */
+        .bar-chart-bar-special-value { background-color: #F5F2EF !important; } /* Branco/creme para valor especial */
+        .price-up { color: #10B981; } /* Verde para alta */
+        .price-down { color: #EF4444; } /* Vermelho para baixa */
+        .spinner {
+            border-top-color: #D2C3B5; /* Cor do spinner baseada no tema de café */
+            border-right-color: #D2C3B5;
+            border-bottom-color: #D2C3B5;
+            border-left-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Estilos para garantir que as legendas das barras sejam visíveis */
+        .bar-legend-item {
+            display: inline-block;
+            min-width: 2.5rem; /* Largura mínima para a cor ser visível */
+            height: 1rem; /* Altura para a cor ser visível */
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen bg-gradient-to-br from-[#4A3D36] to-[#6F5B50] text-[#F5F2EF] font-inter">
+        <!-- Cabeçalho Fixo -->
+        <header class="fixed top-0 left-0 w-full bg-[#3A2F2B] bg-opacity-90 shadow-lg z-50 p-4">
+            <div class="max-w-6xl mx-auto flex justify-between items-center">
+                <!-- Logo e Texto "COFFEE FOREX" dentro do Link, alinhados com flex e space-x-4 -->
+                <a href="#hero" class="text-2xl font-bold text-[#D2C3B5] hover:text-[#F5F2EF] transition-colors duration-200 font-barcelony flex items-center space-x-4">
+                    <img src="https://placehold.co/40x40/D2C3B5/4A3D36?text=LOGO" alt="Coffee Forex Logo" class="h-12 w-auto">
+                    <span>COFFEE FOREX</span>
+                </a>
+                <div class="flex items-center space-x-4">
+                    <nav class="relative" id="menu-nav">
+                        <button
+                            id="menu-toggle"
+                            class="text-[#D2C3B5] hover:text-[#F5F2EF] font-medium transition-colors duration-200 p-2 rounded-md hover:bg-[#5A4F46] focus:outline-none focus:ring-2 focus:ring-[#D2C3B5]"
+                        >
+                            Menu <span id="menu-arrow">▼</span>
+                        </button>
+                        <ul id="menu-dropdown" class="absolute right-0 mt-2 w-48 bg-[#5A4F46] rounded-md shadow-lg py-1 z-10 hidden">
+                            <li><a href="#introducao-plataforma" class="block px-4 py-2 text-sm text-[#F5F2EF] hover:bg-[#6F5B50] hover:text-[#D2C3B5]">Visão Geral</a></li>
+                            <li><a href="#hero" class="block px-4 py-2 text-sm text-[#F5F2EF] hover:bg-[#6F5B50] hover:text-[#D2C3B5]">Início</a></li>
+                            <li><a href="#desafio-produtor" class="block px-4 py-2 text-sm text-[#F5F2EF] hover:bg-[#6F5B50] hover:text-[#D2C3B5]">Produtor</a></li>
+                            <li><a href="#mercado-ascensao" class="block px-4 py-2 text-sm text-[#F5F2EF] hover:bg-[#6F5B50] hover:text-[#D2C3B5]">Mercado</a></li>
+                            <li><a href="#coffee-forex-bolsa" class="block px-4 py-2 text-sm text-[#F5F2EF] hover:bg-[#6F5B50] hover:text-[#D2C3B5]">Plataforma</a></li>
+                            <li><a href="#cooperativas-cafe" class="block px-4 py-2 text-sm text-[#F5F2EF] hover:bg-[#6F5B50] hover:text-[#D2C3B5]">Cooperativas</a></li>
+                            <li><a href="#corretor-cafe" class="block px-4 py-2 text-sm text-[#F5F2EF] hover:bg-[#6F5B50] hover:text-[#D2C3B5]">Corretor</a></li>
+                            <li><a href="#coffee-quotes-section" class="block px-4 py-2 text-sm text-[#F5F2EF] hover:bg-[#6F5B50] hover:text-[#D2C3B5]">Cotações de Café</a></li>
+                            <li><a href="#melhorar-retorno" class="block px-4 py-2 text-sm text-[#F5F2EF] hover:bg-[#6F5B50] hover:text-[#D2C3B5]">Melhore seu Retorno</a></li>
+                            <li><a href="#junte-se" class="block px-4 py-2 text-sm text-[#F5F2EF] hover:bg-[#6F5B50] hover:text-[#D2C3B5]">Junte-se</a></li>
+                        </ul>
+                    </nav>
+                    <a href="#junte-se" class="hidden sm:inline-block bg-[#D2C3B5] text-[#4A3D36] font-bold py-2 px-4 rounded-full text-sm hover:bg-[#F5F2EF] transition-all duration-300 shadow-md">
+                        Cadastre-se Agora
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Nova Seção: Introdução à Plataforma (Acima do Hero) -->
+        <section id="introducao-plataforma" class="py-20 bg-[#3A2F2B] text-center scroll-mt-24">
+            <div class="max-w-4xl mx-auto px-4">
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-[#D2C3B5] leading-tight mb-4">
+                    Revolucione o Comércio de Café
+                </h2>
+                <p class="text-xl text-[#F5F2EF] mb-8">
+                    Conectando produtores e compradores em uma plataforma justa, transparente e inovadora para cafés especiais e tradicionais.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#coffee-forex-bolsa" class="inline-block bg-[#D2C3B5] text-[#4A3D36] font-bold py-3 px-8 rounded-full text-lg hover:bg-[#F5F2EF] transition-all duration-300 shadow-lg">
+                        Explore a Plataforma
+                    </a>
+                    <a href="#junte-se" class="inline-block border-2 border-[#D2C3B5] text-[#D2C3B5] font-bold py-3 px-8 rounded-full text-lg hover:bg-[#D2C3B5] hover:text-[#4A3D36] transition-all duration-300 shadow-lg">
+                        Cadastre-se Agora
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Hero -->
+        <section id="hero" class="relative pt-32 pb-20 text-center bg-cover bg-center" style="background-image: url('https://placehold.co/1200x600/5A4F46/D2C3B5?text=Coffee+Forex');">
+            <!-- Alterando a cor de fundo do overlay -->
+            <div class="absolute inset-0 bg-[#4A3D36] opacity-40"></div>
+            <div class="relative z-10 max-w-4xl mx-auto px-4">
+                <h1 class="text-5xl sm:text-6xl font-extrabold text-[#F5F2EF] leading-tight mb-4">
+                    A nova era na comercialização de cafés especiais e pontuados
+                </h1>
+                <p class="text-xl text-[#D2C3B5] mb-8">
+                    Onde a qualidade define o valor.
+                </p>
+                <a href="#coffee-quotes-section" class="inline-block bg-[#D2C3B5] text-[#4A3D36] font-bold py-3 px-8 rounded-full text-lg hover:bg-[#F5F2EF] transition-all duration-300 shadow-lg">
+                    Cotações de Café
+                </a>
+            </div>
+        </section>
+
+        <!-- Seção: O Desafio do Produtor de Café Especial -->
+        <section id="desafio-produtor" class="py-16 bg-[#6F5B50] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">O desafio do produtor de café especial</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Precificação inadequada</h3>
+                        <p class="text-[#D2C9BF]">Cafés de alta qualidade frequentemente são comercializados pelo mesmo preço de cafés comuns.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Dependência de intermediários</h3>
+                        <p class="text-[#D2C9BF]">Produtores têm pouco poder de negociação e dependem de terceiros para acessar o mercado.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Volatilidade do mercado</h3>
+                        <p class="text-[#D2C9BF]">Preços definidos por bolsas tradicionais não consideram adequadamente a qualidade e características únicas.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Falta de reconhecimento</h3>
+                        <p class="text-[#D2C9BF]">O investimento em qualidade nem sempre é recompensado financeiramente.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção: Um Mercado em Ascensão -->
+        <section id="mercado-ascensao" class="py-16 bg-[#8B7B6D] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">Um mercado em ascensão: especiais vs. tradicionais</h2>
+                <p class="text-lg text-[#F5F2EF] mb-8">O mercado de cafés está em constante evolução. Veja a comparação entre cafés especiais e tradicionais:</p>
+                
+                <!-- Gráfico de Barras Comparativo (Produção e Valor de Mercado) -->
+                <div class="bg-[#9B928A] p-6 rounded-lg shadow-xl mb-8">
+                    <h3 class="text-2xl font-bold gradient-text mb-4">Produção (milhões de sacas) e Valor de Mercado (R$ bilhões)</h3>
+                    <div class="flex flex-col items-center space-y-4" id="market-data-chart">
+                        <!-- Conteúdo será injetado por JS -->
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-4 mt-6 text-sm text-[#D2C9BF]">
+                        <span class="bar-chart-bar-special-prod px-3 py-1 rounded-md bar-legend-item">Prod. Especial</span>
+                        <span class="bar-chart-bar-special-value px-3 py-1 rounded-md bar-legend-item">Valor Especial</span>
+                        <span class="bar-chart-bar-traditional-prod px-3 py-1 rounded-md bar-legend-item">Prod. Tradicional</span>
+                        <span class="bar-chart-bar-traditional-value px-3 py-1 rounded-md bar-legend-item">Valor Tradicional</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2">O mercado de cafés especiais continua a crescer, com <strong id="special-prod-last-year"></strong> em <span id="last-year-market"></span> e um valor de <strong id="special-value-last-year"></strong>.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2">Os cafés tradicionais ainda dominam o volume, com <strong id="traditional-prod-last-year"></strong> e um valor de <strong id="traditional-value-last-year"></strong> em <span id="last-year-market-2"></span>, mas com menor valor agregado por saca.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2">A participação de cafés especiais na produção nacional aumentou para <strong>15,6%</strong>, com crescimento anual constante.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2">Previsão de crescimento de <strong>12%</strong> no mercado de cafés especiais até 2030, indicando uma mudança contínua no consumo.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2"><strong>20%</strong> dos cafés exportados pelo Brasil já são da categoria especial, mostrando a força e o reconhecimento internacional da qualidade.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2">O consumo de cafés especiais representa entre <strong>5% e 10%</strong> do consumo total no Brasil, com espaço para grande expansão.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nova Seção: Dados Consolidados do Mercado -->
+        <section id="dados-consolidados" class="py-16 bg-[#6F5B50] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">Dados consolidados do mercado (<span id="consolidated-start-year"></span> - <span id="consolidated-end-year"></span>)</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Produção Total de Cafés Especiais</h3>
+                        <p class="text-[#D2C9BF] text-2xl font-bold" id="total-special-prod"></p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Valor Total de Cafés Especiais</h3>
+                        <p class="text-[#D2C9BF] text-2xl font-bold" id="total-special-value"></p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Produção Total de Cafés Tradicionais</h3>
+                        <p class="text-[#D2C9BF] text-2xl font-bold" id="total-traditional-prod"></p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Valor Total de Cafés Tradicionais</h3>
+                        <p class="text-[#D2C9BF] text-2xl font-bold" id="total-traditional-value"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção: Operação de Cooperativas de Café -->
+        <section id="cooperativas-cafe" class="py-16 bg-[#8B7B6D] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">Operação de Cooperativas de Café (<span id="coop-data-year"></span>)</h2>
+                <p class="text-lg text-[#F5F2EF] mb-8">As cooperativas desempenham um papel vital na cadeia do café. Veja como elas atuam e como a Coffee Forex as beneficia:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left mb-12">
+                    <!-- COLUNA 1: Importância da Cooperativa para o Produtor -->
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Importância da Cooperativa para o Produtor</h3>
+                        <ul class="list-disc list-inside text-[#D2C9BF] space-y-1" id="coop-importance-list">
+                            <!-- Conteúdo será injetado por JS -->
+                        </ul>
+                    </div>
+
+                    <!-- COLUNA 2: Benefícios da Coffee Forex para Cooperativas -->
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Benefícios da Coffee Forex para Cooperativas</h3>
+                        <ul class="list-disc list-inside text-[#D2C9BF] space-y-1" id="coop-platform-benefits-list">
+                            <!-- Conteúdo será injetado por JS -->
+                        </ul>
+                    </div>
+
+                    <!-- COLUNA 3: Volume Anual por Estado -->
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Volume Anual por Estado</h3>
+                        <ul class="list-disc list-inside text-[#D2C9BF] space-y-1" id="coop-annual-commercialization-list">
+                            <!-- Conteúdo será injetado por JS -->
+                        </ul>
+                    </div>
+                </div>
+
+                <p class="text-lg text-[#F5F2EF]">Ao integrar-se à Coffee Forex, as cooperativas ampliam sua capacidade de comercialização, garantem a transparência e a valorização dos cafés de seus associados, tanto especiais quanto tradicionais, e acessam um mercado mais dinâmico e global.</p>
+            </div>
+        </section>
+
+        <!-- Seção: Corretor de Café -->
+        <section id="corretor-cafe" class="py-16 bg-[#6F5B50] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">O Corretor de Café</h2>
+                <p class="text-lg text-[#F5F2EF] mb-8" id="broker-role"></p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left mb-12">
+                    <template id="broker-benefits-template">
+                        <!-- Conteúdo será injetado por JS -->
+                    </template>
+                </div>
+
+                <p class="text-lg text-[#F5F2EF] mb-8" id="broker-cta"></p>
+                <a href="#junte-se" class="inline-block bg-[#D2C3B5] text-[#4A3D36] font-bold py-3 px-8 rounded-full text-lg hover:bg-[#F5F2EF] transition-all duration-300 shadow-lg">
+                    Junte-se como Corretor
+                </a>
+            </div>
+        </section>
+
+        <!-- Seção: Coffee Forex: Sua Bolsa de Cafés Especiais e Tradicionais -->
+        <section id="coffee-forex-bolsa" class="py-16 bg-[#6F5B50] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">Coffee Forex: sua bolsa de cafés especiais e tradicionais</h2>
+                <p class="text-lg text-[#F5F2EF] mb-8">Uma plataforma inovadora que conecta produtores e compradores de cafés especiais e tradicionais, criando um ambiente de negociação justo e transparente para ambos os mercados.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Valorização justa e otimizada</h3>
+                        <p class="text-[#D2C9BF]">Preços baseados na qualidade real do café, determinada por pontuação técnica, para cafés especiais e um sistema de negociação otimizado para tradicionais, garantindo maior retorno.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Negociação direta e ampliada</h3>
+                        <p class="text-[#D2C9BF]">Produtores e compradores interagem sem intermediários, aumentando a margem e o alcance para ambos os tipos de café no mercado global.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Mercado dinâmico e abrangente</h3>
+                        <p class="text-[#D2C9BF]">Ambiente de bolsa de valores adaptado às particularidades tanto do café especial quanto do tradicional, oferecendo liquidez e oportunidades para todos.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Segurança e transparência</h3>
+                        <p class="text-[#D2C9BF]">Todas as transações para cafés especiais e tradicionais são verificadas e rastreáveis, proporcionando confiança e integridade ao processo de comercialização.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Dados financeiros em tempo real</h3>
+                        <p class="text-[#D2C9BF]">Acesso a cotações e análises de mercado para cafés tradicionais, permitindo decisões de venda e compra mais estratégicas e informadas.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Otimização para cafés tradicionais</h3>
+                        <p class="text-[#D2C9BF]">Ferramentas e insights específicos para otimizar a comercialização de grandes volumes de cafés tradicionais, com foco em eficiência e rentabilidade.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção: Produtor Define o Preço -->
+        <section id="produtor-define-preco" class="py-16 bg-[#8B7B6D] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">Produtor define o preço</h2>
+                <p class="text-lg text-[#F5F2EF] mb-8">Na Coffee Forex, o produtor tem o controle sobre o valor de seu café, baseado na pontuação de qualidade.</p>
+                
+                <!-- Gráfico de Dispersão Simulado (Pontuação x Preço) -->
+                <div class="bg-[#9B928A] p-6 rounded-lg shadow-xl mb-8">
+                    <h3 class="text-xl font-semibold text-[#F5F2EF] mb-4">Relação pontuação x preço (R$/saca)</h3>
+                    <div class="relative h-64 w-full flex items-end justify-center">
+                        <!-- Eixo X (Pontuação) -->
+                        <div class="absolute bottom-0 left-0 right-0 h-px bg-[#D2C9BF]">
+                            <template id="score-x-axis-template">
+                                <!-- Conteúdo será injetado por JS -->
+                            </template>
+                        </div>
+                        <!-- Eixo Y (Preço) -->
+                        <div class="absolute top-0 bottom-0 left-0 w-px bg-[#D2C9BF]">
+                            <template id="score-y-axis-template">
+                                <!-- Conteúdo será injetado por JS -->
+                            </template>
+                        </div>
+                        <!-- Pontos de Dados -->
+                        <template id="score-data-points-template">
+                            <!-- Conteúdo será injetado por JS -->
+                        </template>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2">1. Avaliação do café: cafés são avaliados por Q-Graders certificados, recebendo pontuação de 0 a 100.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2">2. Definição de preço: com base na pontuação, o produtor estabelece o preço da saca, considerando qualidade e características únicas.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">3. Listagem na plataforma: o café é listado com sua pontuação, características sensoriais e preço definido.</h3>
+                        <p class="text-[#D2C9BF]">O café é listado com sua pontuação, características sensoriais e preço definido.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">4. Negociação transparente: compradores podem adquirir diretamente, com total visibilidade sobre qualidade e origem.</h3>
+                        <p class="text-[#D2C9BF]">Compradores podem adquirir diretamente, com total visibilidade sobre qualidade e origem.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção: Valorização e Autonomia -->
+        <section id="valorizacao-autonomia" class="py-16 bg-[#6F5B50] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">Valorização e autonomia</h2>
+                <p class="text-lg text-[#F5F2EF] mb-8">A Coffee Forex oferece aos produtores de cafés especiais uma nova forma de comercialização que valoriza a qualidade e proporciona maior controle sobre seus negócios.</p>
+                
+                <!-- Gráfico de Comparação de Preços Simulado -->
+                <div class="bg-[#9B928A] p-6 rounded-lg shadow-xl mb-8">
+                    <h3 class="text-xl font-semibold text-[#F5F2EF] mb-4">Comparação de preços por pontuação</h3>
+                    <div class="flex flex-col items-center">
+                        <template id="price-comparison-template">
+                            <!-- Conteúdo será injetado por JS -->
+                        </template>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2"><strong>15,6%</strong> da produção nacional de café já é de cafés especiais, com crescimento anual constante.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2">Previsão de crescimento de <strong>12%</strong> no mercado de cafés especiais até 2030.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2"><strong>20%</strong> dos cafés exportados pelo Brasil já são da categoria especial.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <p class="text-[#D2C9BF] mb-2">Consumo de cafés especiais representa entre <strong>5% e 10%</strong> do consumo total no Brasil, com espaço para grande expansão.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nova Seção: Como Melhorar seu Retorno no Preço da Saca de Café -->
+        <section id="melhorar-retorno" class="py-16 bg-[#6F5B50] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">Como melhorar seu retorno no preço da saca de café</h2>
+                <p class="text-lg text-[#F5F2EF] mb-8">A Coffee Forex empodera o produtor a obter o máximo valor por seu café especial. Veja como:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">1. Invista na qualidade e certificação</h3>
+                        <p class="text-[#D2C9BF]">Cafés com pontuações mais altas (Q-Graders) alcançam preços significativamente melhores. Foco em boas práticas de cultivo e processamento para elevar sua pontuação.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">2. Utilize a precificação baseada na qualidade</h3>
+                        <p class="text-[#D2C9BF]">Nossa plataforma permite que você defina o preço da sua saca com base na pontuação oficial. Não aceite preços de mercado tradicional que não valorizam seu esforço.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">3. Negocie diretamente com compradores globais</h3>
+                        <p class="text-[#D2C9BF]">Elimine intermediários que reduzem sua margem. Conecte-se diretamente com torrefadores e compradores que buscam cafés especiais e estão dispostos a pagar mais pela qualidade.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">4. Destaque a rastreabilidade e história</h3>
+                        <p class="text-[#D2C9BF]">Compradores de cafés especiais valorizam a história por trás do grão. Utilize a plataforma para compartilhar detalhes sobre sua fazenda, métodos de cultivo e certificações.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">5. Acompanhe as tendências de mercado</h3>
+                        <p class="text-[#D2C9BF]">Use os dados e insights da Coffee Forex para entender a demanda por diferentes tipos de café e ajustar sua produção e estratégia de venda.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">6. Participe da comunidade</h3>
+                        <p class="text-[#D2C9BF]">Troque experiências com outros produtores e especialistas. O conhecimento compartilhado pode levar a melhorias na qualidade e, consequentemente, no preço da sua saca.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção: Qualidade e Transparência Garantidas (Para Compradores) -->
+        <section id="qualidade-transparencia" class="py-16 bg-[#8B7B6D] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">Qualidade e transparência garantidas</h2>
+                <p class="text-lg text-[#F5F2EF] mb-8">Para compradores e torrefadores, a Coffee Forex oferece uma nova experiência de aquisição de cafés especiais.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Acesso a cafés premium</h3>
+                        <p class="text-[#D2C9BF]">Encontre cafés com pontuações verificadas e características específicas para seu negócio.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Negociação direta</h3>
+                        <p class="text-[#D2C9BF]">Conecte-se diretamente com produtores, eliminando intermediários e reduzindo custos.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Rastreabilidade completa</h3>
+                        <p class="text-[#D2C9BF]">Conheça a origem, métodos de cultivo e processamento de cada lote.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Investimento estratégico</h3>
+                        <p class="text-[#D2C9BF]">Acompanhe tendências de mercado e faça compras antecipadas com preços transparentes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção: Simples, Rápido e Seguro (Processo Coffee Forex) -->
+        <section id="processo-coffeeforex" class="py-16 bg-[#6F5B50] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">Simples, rápido e seguro</h2>
+                <p class="text-lg text-[#F5F2EF] mb-8">Nossa plataforma oferece um processo transparente e eficiente para a comercialização de cafés especiais:</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">1. Cadastro e certificação</h3>
+                        <p class="text-[#D2C9BF]">Produtores se cadastram e têm sua produção certificada por especialistas.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">2. Avaliação e pontuação</h3>
+                        <p class="text-[#D2C9BF]">Amostras são avaliadas e pontuadas conforme critérios internacionais de qualidade.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">3. Definição de preço</h3>
+                        <p class="text-[#D2C9BF]">Com base na pontuação, o produtor estabelece o preço da saca.</p>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">4. Negociação e fechamento</h3>
+                        <p class="text-[#D2C9BF]">Compradores acessam a plataforma, analisam ofertas e fecham negócios diretamente.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção: Por Que Escolher Coffee Forex? -->
+        <section id="por-que-coffeeforex" class="py-16 bg-[#8B7B6D] text-center scroll-mt-24">
+            <div class="max-w-6xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#D2C3B5] mb-12">Por que escolher Coffee Forex?</h2>
+                <p class="text-lg text-[#F5F2EF] mb-8">Nossa plataforma se destaca no mercado por oferecer uma experiência única para produtores e compradores de cafés especiais.</p>
+                
+                <!-- Comparativo Coffee Forex vs. Mercado Tradicional (Texto) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Coffee Forex</h3>
+                        <ul class="list-disc list-inside text-[#D2C9BF] space-y-2">
+                            <li>Transparência total: todas as informações sobre origem, processamento e pontuação são verificadas e disponibilizadas.</li>
+                            <li>Justa remuneração: produtores recebem valor adequado pelo seu trabalho, baseado na qualidade real do café.</li>
+                            <li>Inovação constante: primeira plataforma a aplicar o conceito de bolsa de valores para cafés especiais no Brasil.</li>
+                            <li>Comunidade engajada: rede de produtores, compradores e especialistas comprometidos com a qualidade do café.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">Mercado tradicional</h3>
+                        <ul class="list-disc list-inside text-[#D2C9BF] space-y-2 opacity-70">
+                            <li>Menor transparência: informações podem ser limitadas ou difíceis de verificar.</li>
+                            <li>Precificação arbitrária: preços muitas vezes não refletem a qualidade real do café.</li>
+                            <li>Pouca inovação: processos de negociação estagnados.</li>
+                            <li>Falta de conexão: produtores e compradores isolados por intermediários.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção: Junte-se à Revolução do Café Especial! (CTA Final) -->
+        <section id="junte-se" class="py-16 bg-[#4A3D36] text-center scroll-mt-24">
+            <div class="max-w-4xl mx-auto px-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-[#F5F2EF] mb-6">Junte-se à revolução do café especial!</h2>
+                <p class="text-xl text-[#D2C3B5] mb-8">
+                    Faça parte da primeira plataforma que valoriza verdadeiramente a qualidade do café brasileiro e conecta produtores e compradores de forma justa e transparente.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                    <!-- Para Produtores -->
+                    <div class="bg-[#D2C3B5] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-bold mb-2">Para Produtores:</h3>
+                        <p class="text-base">Cadastre sua produção, obtenha pontuação oficial e defina o valor justo pelo seu trabalho.</p>
+                    </div>
+                    <!-- Para Compradores -->
+                    <div class="bg-[#D2C3B5] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-bold mb-2">Para Compradores:</h3>
+                        <p class="text-base">Acesse cafés de qualidade certificada, com origem rastreável e negocie diretamente com produtores.</p>
+                    </div>
+                    <!-- Para Corretores -->
+                    <div class="bg-[#D2C3B5] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-bold mb-2">Para Corretores:</h3>
+                        <p class="text-base">Amplie sua rede, acesse dados de mercado em tempo real e otimize suas negociações.</p>
+                    </div>
+                    <!-- Para Cooperativas -->
+                    <div class="bg-[#D2C3B5] p-6 rounded-lg shadow-xl text-left">
+                        <h3 class="text-xl font-bold mb-2">Para Cooperativas:</h3>
+                        <p class="text-base">Fortaleça seus associados com acesso direto ao mercado e ferramentas de gestão avançadas.</p>
+                    </div>
+                </div>
+                <!-- Botão "Cotações de Café" na seção CTA final -->
+                <a href="#coffee-quotes-section" class="inline-block bg-[#F5F2EF] text-[#4A3D36] font-bold py-3 px-8 rounded-full text-lg hover:bg-[#F5F2EF] transition-all duration-300 shadow-lg">
+                    Cotações de Café
+                </a>
+            </div>
+        </section>
+
+        <!-- Rodapé -->
+        <footer class="py-4 bg-[#3A2F2B] text-center text-[#D2C9BF] text-sm mt-auto">
+            <p>&copy; 2024 Coffee Forex. Todos os direitos reservados.</p>
+            <p class="mt-2">
+                <a href="https://coffee.forex" target="_blank" rel="noopener noreferrer" class="hover:text-[#F5F2EF] transition-colors duration-200">https://coffee.forex</a> |
+                <a href="mailto:contato@coffeeforex.com.br" class="hover:text-[#F5F2EF] transition-colors duration-200 ml-2">contato@coffeeforex.com.br</a> |
+                <span class="ml-2">+55 (12) 98819-8101</span>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Dados hardcoded diretamente no JavaScript
+        const marketData = [
+            { year: 2020, special_production: 5.0, special_value: 3.0, traditional_production: 35.0, traditional_value: 17.0 },
+            { year: 2021, special_production: 5.8, special_value: 3.9, traditional_production: 34.5, traditional_value: 16.8 },
+            { year: 2022, special_production: 6.7, special_value: 5.2, traditional_production: 34.0, traditional_value: 16.5 },
+            { year: 2023, special_production: 7.5, special_value: 6.5, traditional_production: 33.8, traditional_value: 16.3 },
+            { year: 2024, special_production: 8.5, special_value: 7.8, traditional_production: 33.5, traditional_value: 16.0 },
+            { year: 2025, special_production: 9.5, special_value: 9.2, traditional_production: 33.0, traditional_value: 15.8 }
+        ];
+
+        const scorePriceData = [
+            { score: 80, price: 700 },
+            { score: 82, price: 850 },
+            { score: 84, price: 1000 },
+            { score: 86, price: 1300 },
+            { score: 88, price: 1600 },
+            { score: 90, price: 2100 },
+            { score: 92, price: 2800 },
+            { score: 94, price: 3700 },
+            { score: 96, price: 5100 },
+        ];
+
+        const coffeeQuotes = [
+            { id: 1, type: 'Arábica', origin: 'Brasil', price: 18.50, change: 0.45, percentChange: 2.50, volume: '5000t' },
+            { id: 2, type: 'Robusta', origin: 'Vietnã', price: 12.30, change: -0.20, percentChange: -1.60, volume: '7000t' },
+            { id: 3, type: 'Bourbon', origin: 'Colômbia', price: 22.10, change: 0.70, percentChange: 3.27, volume: '3000t' },
+            { id: 4, type: 'Catuaí', origin: 'Brasil', price: 17.80, change: 0.15, percentChange: 0.85, volume: '4500t' },
+            { id: 5, type: 'Geisha', origin: 'Panamá', price: 85.00, change: -2.50, percentChange: -2.86, volume: '500kg' },
+            { id: 6, type: 'Typica', origin: 'Etiópia', price: 25.40, change: 0.90, percentChange: 3.67, volume: '2000t' },
+            { id: 7, type: 'Kona', origin: 'Hawaii', price: 60.00, change: 1.20, percentChange: 2.04, volume: '800kg' },
+            { id: 8, type: 'Liberica', origin: 'Filipinas', price: 10.50, change: -0.05, percentChange: -0.47, volume: '1500t' },
+            { id: 9, type: 'Moka', origin: 'Iêmen', price: 30.20, change: 1.10, percentChange: 3.78, volume: '1000t' },
+            { id: 10, type: 'Pacamara', origin: 'El Salvador', price: 35.80, change: -0.60, percentChange: -1.65, volume: '700t' },
+        ];
+
+        const consolidatedMarketData = (() => {
+            let totalSpecialProduction = 0;
+            let totalSpecialValue = 0;
+            let totalTraditionalProduction = 0;
+            let totalTraditionalValue = 0;
+
+            marketData.forEach(yearData => {
+                totalSpecialProduction += yearData.special_production;
+                totalSpecialValue += yearData.special_value;
+                totalTraditionalProduction += yearData.traditional_production;
+                totalTraditionalValue += yearData.traditional_value;
+            });
+
+            return {
+                totalSpecialProduction: Math.round(totalSpecialProduction * 100) / 100,
+                totalSpecialValue: Math.round(totalSpecialValue * 100) / 100,
+                totalTraditionalProduction: Math.round(totalTraditionalProduction * 100) / 100,
+                totalTraditionalValue: Math.round(totalTraditionalValue * 100) / 100,
+                startYear: marketData[0].year,
+                endYear: marketData[marketData.length - 1].year,
+            };
+        })();
+
+        const cooperativeData = (() => {
+            let annualCommercialization = [
+                { volume: 12.5, value: 5.8, unit: 'milhões de sacas', state: 'Minas Gerais', year: 2024 },
+                { volume: 7.2, value: 3.1, unit: 'milhões de sacas', state: 'Espírito Santo', year: 2024 },
+                { volume: 3.8, value: 1.7, unit: 'milhões de sacas', state: 'Bahia', year: 2024 },
+                { volume: 2.1, value: 0.9, unit: 'milhões de sacas', state: 'Paraná', year: 2024 },
+                { volume: 4.5, value: 2.0, unit: 'milhões de sacas', state: 'São Paulo', year: 2024 },
+                { volume: 1.8, value: 0.7, unit: 'milhões de sacas', state: 'Rondônia', year: 2024 },
+                { volume: 0.5, value: 0.2, unit: 'milhões de sacas', state: 'Rio de Janeiro', year: 2024 },
+                { volume: 0.9, value: 0.3, unit: 'milhões de sacas', state: 'Mato Grosso', year: 2024 },
+            ];
+
+            // Ordena o array por 'volume' em ordem decrescente
+            annualCommercialization.sort((a, b) => b.volume - a.volume);
+
+            return {
+                annualCommercialization: annualCommercialization,
+                importance: {
+                    poderDeNegociacao: 'Aumentam o poder de negociação dos produtores, garantindo preços mais justos.',
+                    acessoAoMercado: 'Facilitam o acesso a mercados maiores e mais exigentes, incluindo o internacional.',
+                    suporteTecnico: 'Oferecem suporte técnico, capacitação e acesso a tecnologias que melhoram a qualidade e produtividade.',
+                    reducaoDeCustos: 'Reduzem custos de produção e comercialização através de compras e vendas em escala.',
+                    certificacao: 'Apoiam na obtenção de certificações de qualidade e sustentabilidade, agregando valor ao produto.',
+                },
+                platformBenefits: {
+                    transparenciaPreco: 'Acesso a cotações transparentes e em tempo real para cafés especiais e tradicionais.',
+                    conexaoDireta: 'Conexão direta com compradores globais, eliminando intermediários e aumentando a margem.',
+                    gestaoDeLotes: 'Ferramentas para gestão eficiente de grandes volumes de lotes de café, com rastreabilidade completa.',
+                    valorizacaoQualidade: 'Mecanismos de avaliação e pontuação que garantem a valorização da qualidade do café produzido.',
+                    insightsMercado: 'Análises e insights de mercado para otimizar estratégias de venda e compra.',
+                    reducaoBurocracia: 'Simplificação dos processos de comercialização, reduzindo a burocracia e agilizando as operações.',
+                }
+            };
+        })();
+
+        const brokerData = {
+            role: 'O corretor de café atua como um elo fundamental entre produtores, cooperativas e compradores. Ele possui expertise no mercado, facilitando negociações e garantindo as melhores condições para seus clientes.',
+            benefits: {
+                acessoAmplo: 'Acesso a uma vasta rede de produtores e compradores verificados na plataforma.',
+                dadosMercado: 'Informações de mercado em tempo real e análises aprofundadas para negociações mais estratégicas.',
+                agilidadeNegociacao: 'Ferramentas otimizadas para agilizar o processo de compra e venda de lotes.',
+                expansaoPortifolio: 'Oportunidade de expandir o portfólio de cafés oferecidos e atender a uma demanda diversificada.',
+                segurancaTransacional: 'Segurança e rastreabilidade em todas as transações, construindo confiança com produtores e compradores.',
+                reducaoCustosOperacionais: 'Otimização de processos que podem levar à redução de custos operacionais e aumento da rentabilidade.',
+            },
+            callToAction: 'Corretores, maximizem suas oportunidades de negócio. Juntem-se à Coffee Forex e transformem a forma como vocês atuam no mercado de café!'
+        };
+
+        // --- Funções de Manipulação do DOM e Renderização ---
+
+        // Função para formatar títulos de benefícios (para o corretor)
+        function formatBenefitTitle(key) {
+            const titles = {
+                acessoAmplo: 'Acesso Amplo ao Mercado',
+                dadosMercado: 'Dados de Mercado e Análises',
+                agilidadeNegociacao: 'Agilidade nas Negociações',
+                expansaoPortifolio: 'Expansão de Portfólio',
+                segurancaTransacional: 'Segurança Transacional',
+                reducaoCustosOperacionais: 'Redução de Custos Operacionais',
+            };
+            return titles[key] || key;
+        }
+
+        // Renderiza o gráfico de barras da seção "Mercado em Ascensão"
+        function renderMarketDataChart() {
+            const container = document.getElementById('market-data-chart');
+            if (!container) return; // Verifica se o container existe
+            container.innerHTML = ''; // Limpa o conteúdo existente
+
+            marketData.forEach(data => {
+                const div = document.createElement('div');
+                div.className = 'flex flex-col sm:flex-row items-center w-full max-w-3xl justify-between border-b border-[#6F5B50] pb-2';
+                div.innerHTML = `
+                    <span class="w-20 text-right text-[#D2C9BF] font-semibold text-lg sm:mr-4">${data.year}</span>
+                    <div class="flex-1 flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                        <!-- Barras de Produção -->
+                        <div class="flex flex-col items-center w-full sm:w-1/2">
+                            <span class="text-sm text-[#D2C9BF] mb-1">Prod. (Milhões Sacas)</span>
+                            <div class="flex items-center w-full">
+                                <div
+                                    class="h-6 bar-chart-bar-special-prod mr-1 rounded-md"
+                                    style="width: ${data.special_production * 2}%"
+                                    title="Especial: ${data.special_production}M sacas"
+                                ></div>
+                                <div
+                                    class="h-6 bar-chart-bar-traditional-prod rounded-md"
+                                    style="width: ${data.traditional_production * 1.5}%"
+                                    title="Tradicional: ${data.traditional_production}M sacas"
+                                ></div>
+                            </div>
+                            <span class="text-xs text-[#D2C9BF] mt-1">Esp: ${data.special_production}M / Trad: ${data.traditional_production}M</span>
+                        </div>
+                        <!-- Barras de Valor -->
+                        <div class="flex flex-col items-center w-full sm:w-1/2">
+                            <span class="text-sm text-[#D2C9BF] mb-1">Valor (R$ Bilhões)</span>
+                            <div class="flex items-center w-full">
+                                <div
+                                    class="h-6 bar-chart-bar-special-value mr-1 rounded-md"
+                                    style="width: ${data.special_value * 4}%"
+                                    title="Especial: R$ ${data.special_value}B"
+                                ></div>
+                                <div
+                                    class="h-6 bar-chart-bar-traditional-value rounded-md"
+                                    style="width: ${data.traditional_value * 2}%"
+                                    title="Tradicional: R$ ${data.traditional_value}B"
+                                ></div>
+                            </div>
+                            <span class="text-xs text-[#D2C9BF] mt-1">Esp: R$${data.special_value}B / Trad: R$${data.traditional_value}B</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            // Atualiza os textos abaixo do gráfico
+            const lastYearData = marketData[marketData.length - 1];
+            document.getElementById('special-prod-last-year').textContent = `${lastYearData.special_production} milhões de sacas`;
+            document.getElementById('last-year-market').textContent = lastYearData.year;
+            document.getElementById('special-value-last-year').textContent = `R$ ${lastYearData.special_value} bilhões`;
+            document.getElementById('traditional-prod-last-year').textContent = `${lastYearData.traditional_production} milhões de sacas`;
+            document.getElementById('last-year-market-2').textContent = lastYearData.year;
+            document.getElementById('traditional-value-last-year').textContent = `R$ ${lastYearData.traditional_value} bilhões`;
+        }
+
+        // Renderiza os dados consolidados do mercado
+        function renderConsolidatedMarketData() {
+            document.getElementById('consolidated-start-year').textContent = consolidatedMarketData.startYear;
+            document.getElementById('consolidated-end-year').textContent = consolidatedMarketData.endYear;
+            document.getElementById('total-special-prod').textContent = `${consolidatedMarketData.totalSpecialProduction} milhões de sacas`;
+            document.getElementById('total-special-value').textContent = `R$ ${consolidatedMarketData.totalSpecialValue} bilhões`;
+            document.getElementById('total-traditional-prod').textContent = `${consolidatedMarketData.totalTraditionalProduction} milhões de sacas`;
+            document.getElementById('total-traditional-value').textContent = `R$ ${consolidatedMarketData.totalTraditionalValue} bilhões`;
+        }
+
+        // Renderiza a seção de cooperativas
+        function renderCooperativeData() {
+            const coopYearElement = document.getElementById('coop-data-year');
+            if (cooperativeData.annualCommercialization.length > 0 && coopYearElement) {
+                coopYearElement.textContent = cooperativeData.annualCommercialization[0].year;
+            }
+
+            const importanceList = document.getElementById('coop-importance-list');
+            if (importanceList) {
+                importanceList.innerHTML = '';
+                for (const key in cooperativeData.importance) {
+                    const li = document.createElement('li');
+                    li.textContent = cooperativeData.importance[key];
+                    importanceList.appendChild(li);
+                }
+            }
+
+            const platformBenefitsList = document.getElementById('coop-platform-benefits-list');
+            if (platformBenefitsList) {
+                platformBenefitsList.innerHTML = '';
+                for (const key in cooperativeData.platformBenefits) {
+                    const li = document.createElement('li');
+                    li.textContent = cooperativeData.platformBenefits[key];
+                    platformBenefitsList.appendChild(li);
+                }
+            }
+
+            const annualCommercializationList = document.getElementById('coop-annual-commercialization-list');
+            if (annualCommercializationList) {
+                annualCommercializationList.innerHTML = '';
+                cooperativeData.annualCommercialization.forEach(data => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>${data.state}:</strong> ${data.volume} ${data.unit} (Valor: R$ ${data.value} bilhões)`;
+                    annualCommercializationList.appendChild(li);
+                });
+            }
+        }
+
+        // Renderiza a seção do corretor de café
+        function renderBrokerData() {
+            document.getElementById('broker-role').textContent = brokerData.role;
+
+            const brokerBenefitsContainer = document.querySelector('#corretor-cafe .grid');
+            if (brokerBenefitsContainer) {
+                brokerBenefitsContainer.innerHTML = ''; // Limpa o conteúdo existente
+                for (const key in brokerData.benefits) {
+                    const div = document.createElement('div');
+                    div.className = 'bg-[#5A4F46] p-6 rounded-lg shadow-xl text-left';
+                    div.innerHTML = `
+                        <h3 class="text-xl font-semibold text-[#F5F2EF] mb-2">${formatBenefitTitle(key)}</h3>
+                        <p class="text-[#D2C9BF]">${brokerData.benefits[key]}</p>
+                    `;
+                    brokerBenefitsContainer.appendChild(div);
+                }
+            }
+            document.getElementById('broker-cta').textContent = brokerData.callToAction;
+        }
+
+        // Renderiza a tabela de cotações de café
+        function renderCoffeeQuotesTable() {
+            const tableBody = document.querySelector('#coffee-quotes-section tbody');
+            if (!tableBody) return;
+            tableBody.innerHTML = ''; // Limpa o conteúdo existente
+
+            if (coffeeQuotes.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-[#D2C3B5] text-lg py-10">
+                            Nenhum grão de cotação disponível no momento.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            coffeeQuotes.forEach(coffee => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-[#5A4F46] transition-colors duration-200';
+                const priceChangeClass = coffee.change >= 0 ? 'price-up' : 'price-down';
+                const percentChangeClass = coffee.percentChange >= 0 ? 'price-up' : 'price-down';
+
+                row.innerHTML = `
+                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-[#D2C3B5]">${coffee.type}</td>
+                    <td class="px-4 py-4 whitespace-nowrap text-sm text-[#F5F2EF]">${coffee.origin}</td>
+                    <td class="px-4 py-4 whitespace-nowrap text-sm text-[#F5F2EF]">${coffee.price.toFixed(2)}</td>
+                    <td class="px-4 py-4 whitespace-nowrap text-sm ${priceChangeClass}">
+                        ${coffee.change >= 0 ? `+${coffee.change.toFixed(2)}` : coffee.change.toFixed(2)}
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap text-sm ${percentChangeClass}">
+                        ${coffee.percentChange >= 0 ? `+${coffee.percentChange.toFixed(2)}%` : `${coffee.percentChange.toFixed(2)}%`}
+                    </td>
+                    <td class="px-4 py-4 whitespace-nowrap text-sm text-[#D2C3B5]">${coffee.volume}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+
+        // --- Event Listeners e Inicialização ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Menu dropdown
+            const menuToggle = document.getElementById('menu-toggle');
+            const menuDropdown = document.getElementById('menu-dropdown');
+            const menuNav = document.getElementById('menu-nav');
+            const menuArrow = document.getElementById('menu-arrow');
+
+            if (menuToggle && menuDropdown && menuNav && menuArrow) {
+                menuToggle.addEventListener('click', () => {
+                    menuDropdown.classList.toggle('hidden');
+                    menuArrow.textContent = menuDropdown.classList.contains('hidden') ? '▼' : '▲';
+                });
+
+                // Fechar menu ao clicar fora
+                document.addEventListener('click', (event) => {
+                    if (!menuNav.contains(event.target) && !menuDropdown.classList.contains('hidden')) {
+                        menuDropdown.classList.add('hidden');
+                        menuArrow.textContent = '▼';
+                    }
+                });
+
+                // Fechar menu ao clicar em um item
+                menuDropdown.querySelectorAll('a').forEach(item => {
+                    item.addEventListener('click', () => {
+                        menuDropdown.classList.add('hidden');
+                        menuArrow.textContent = '▼';
+                    });
+                });
+            }
+
+            // Renderizar todos os dados dinâmicos
+            renderMarketDataChart();
+            renderConsolidatedMarketData();
+            renderCooperativeData();
+            renderBrokerData();
+            renderCoffeeQuotesTable();
+        });
+    </script>
+</body>
+</html>
+

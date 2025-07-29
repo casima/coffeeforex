@@ -1,2 +1,0 @@
-# coffeeforex
-MVP Coffee Forex
