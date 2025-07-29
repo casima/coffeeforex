@@ -673,7 +673,7 @@
                 acessoAmplo: 'Acesso Amplo ao Mercado',
                 dadosMercado: 'Dados de Mercado e Análises',
                 agilidadeNegociacao: 'Agilidade nas Negociações',
-                expansaoPortifolio: 'Expansão de Portfólio',
+                expansaoPortifolio: 'Expansão de Portifólio',
                 segurancaTransacional: 'Segurança Transacional',
                 reducaoCustosOperacionais: 'Redução de Custos Operacionais',
             };
@@ -683,8 +683,8 @@
         // Renderiza o gráfico de barras da seção "Mercado em Ascensão"
         function renderMarketDataChart() {
             const container = document.getElementById('market-data-chart');
-            if (!container) return; // Verifica se o container existe
-            container.innerHTML = ''; // Limpa o conteúdo existente
+            if (!container) return;
+            container.innerHTML = '';
 
             marketData.forEach(data => {
                 const div = document.createElement('div');
@@ -890,4 +890,3 @@
     </script>
 </body>
 </html>
-
